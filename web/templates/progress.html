@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Scanning… · Video Hasher{% endblock %}
+
+{% block extra_head %}
+<style>
+  img.thumb{max-width:320px;max-height:180px;border:1px solid #555}
+</style>
+{% endblock %}
+
+{% block body %}
+
+{% if pending %}
+  <!--waiting screen-->
+  <div class="text-center">
+    <h2 class="mb-4"><i class="fa fa-hourglass-start"></i> Ready to scan</h2>
+    <button id="kick" class="btn btn-lg btn-success">
+      <i class="fa fa-play"></i> Start scan
+    </button>
+    <p class="mt-3 text-muted">No hashing has started yet.</p>
+  </div>
+
+  <script>
+    document.getElementById('kick').onclick = () => {
+      fetch('/start/{{ jid }}', {method:'POST'}).then(r => r.ok && location.reload());
+    };
+  </script>
+
+{% else %}
+  <!--live dashboard-->
+  <div class="card shadow-sm"><div class="card-body">
+
+    <div class="d-flex gap-2 mb-3">
+      <button id="pauseBtn" class="btn btn-warning btn-sm">
+        <i class="fa fa-pause"></i> <span>Pause</span>
+      </button>
+      <button id="stopBtn" class="btn btn-danger btn-sm">
+        <i class="fa fa-stop"></i> Stop
+      </button>
+      <a id="toResults" href="{{ url_for('results', jid=jid) }}"
+         class="btn btn-success btn-sm ms-auto d-none">
+        <i class="fa fa-flag-checkered"></i> View results
+      </a>
+    </div>
+
+    <div class="small mb-2">
+      <b>Status:</b> <span id="phase">starting…</span>
+    </div>
+
+    <div class="row gy-2 small">
+      <div class="col-md-6">
+        <div><b>Files:</b> <span id="c1">0/0</span></div>
+        <div><b>Bytes:</b> <span id="bytes">0</span></div>
+        <div><b>Speed:</b> <span id="speed">0 MB/s</span></div>
+        <div>
+          <b>ETA:</b> <span id="eta" data-bs-toggle="tooltip">00:00:00</span>
+        </div>
+        <div><b>Duplicate waste:</b> <span id="dbytes">0</span></div>
+        <div><b>CPU / RAM / Free GB:</b> <span id="sys">0</span></div>
+      </div>
+      <div class="col-md-6">
+        <div><b>Duplicate groups:</b> <span id="groups">0</span></div>
+        <div><b>Largest group:</b> <span id="lg">0</span></div>
+      </div>
+    </div>
+
+    <div class="progress my-3" style="height:26px">
+      <div id="pbar" class="progress-bar bg-success" style="width:0%">0%</div>
+    </div>
+
+    <h5 class="mt-4"><i class="fa fa-file-video"></i> Current file</h5>
+    <code id="fn" class="d-block mb-1"></code>
+    <div class="progress" style="height:16px">
+      <div id="fbar" class="progress-bar bg-info" style="width:0%"></div>
+    </div>
+    <img id="thumb" class="thumb hidden mt-3">
+
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <h6>Scanned</h6>
+        <div class="list-scroll">
+          <ul id="scanned" class="list-group list-group-flush"></ul>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h6>
+          Remaining
+          <span class="small ms-2">
+            <a href="#" onclick="sortRemain('name');return false;">Name▾</a> |
+            <a href="#" onclick="sortRemain('size');return false;">Size▾</a>
+          </span>
+        </h6>
+        <div class="list-scroll">
+          <ul id="remaining" class="list-group list-group-flush"></ul>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h6>Duplicates</h6>
+        <div class="list-scroll">
+          <ul id="dupes" class="list-group list-group-flush"></ul>
+        </div>
+      </div>
+    </div>
+
+  </div></div>
+
+  <script src="{{ url_for('static', filename='progress.js') }}"></script>
+  <script>progressInit("{{ jid }}");</script>
+{% endif %}
+{% endblock %}

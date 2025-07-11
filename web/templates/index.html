@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Start scan · Video Hasher{% endblock %}
+
+{% block body %}
+<div class="card border-secondary shadow-sm mx-auto" style="max-width:520px">
+  <div class="card-body text-center">
+
+    <h3 class="mb-4"><i class="fa fa-folder-open"></i> Choose folder</h3>
+
+    {% if error %}
+      <div class="alert alert-danger py-2">{{ error }}</div>
+    {% endif %}
+
+    <!--give the form an ID so we can control submission-->
+    <form id="scanForm" method="post" autocomplete="off">
+      <!--prevent the browser from auto-submitting on Enter-->
+      <input name="folder" required
+             class="form-control bg-secondary text-light mb-3"
+             placeholder="D:\Videos or /home/me/videos"
+             onkeydown="if(event.key==='Enter'){event.preventDefault();}">
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" name="verify" id="v" checked>
+        <label class="form-check-label" for="v">Verify hashes after scan</label>
+      </div>
+
+      <!--the only element that can submit the form-->
+      <button type="submit" class="btn btn-success w-100 mt-3">
+        <i class="fa fa-play"></i> Start scan
+      </button>
+    </form>
+
+    <p class="small text-muted mt-3">…or drag a folder onto this card</p>
+  </div>
+</div>
+
+<script>
+/* Drag-drop helper — ONLY fills the text box, never submits*/
+const input = document.querySelector('input[name=folder]');
+const box   = document.querySelector('.card-body');
+
+box.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; };
+box.ondrop     = e => {
+  e.preventDefault();
+  const dirItem = [...e.dataTransfer.items]
+        .find(i => i.webkitGetAsEntry && i.webkitGetAsEntry().isDirectory);
+  if (dirItem) {
+    input.value = dirItem.getAsFile().path || '';
+    input.focus();
+  }
+};
+
+/* Optional safety: disable browser autofill resubmit when you refresh
+ * (clears the field whenever the page is (re)loaded). */
+window.addEventListener('pageshow', () => { input.value = ''; });
+</script>
+{% endblock %}

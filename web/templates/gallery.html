@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Gallery · Video Hasher{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3><i class="fa fa-th-large"></i> All Videos Gallery</h3>
+  <a class="btn btn-sm btn-outline-info"
+     href="{{ url_for('results', jid=jid) }}">
+    <i class="fa fa-arrow-left"></i> Back to results
+  </a>
+</div>
+
+<div class="row g-3">
+  {% for v in vids %}
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="card bg-dark text-light h-100">
+      <video class="gallery-video"
+             src="/preview/{{ v.prev }}"
+             poster="/thumb/{{ v.thumb }}"
+             muted loop preload="none"
+             style="width:100%;height:140px;object-fit:cover">
+      </video>
+      <div class="card-body p-2">
+        <div class="small"
+             style="word-break:break-all;white-space:normal;"
+             title="{{ v.name }}">
+          {{ v.name }}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+document.querySelectorAll('.gallery-video').forEach(v => {
+  v.addEventListener('mouseenter', () => v.play());
+  v.addEventListener('mouseleave', () => {
+    v.pause();
+    v.currentTime = 0;
+  });
+});
+</script>
+{% endblock %}

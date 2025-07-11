@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--Dark-only Bootswatch theme-->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/darkly/bootstrap.min.css">
+    <!--Icons-->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!--Neon/AMOLED tweaks-->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}Video Hasher{% endblock %}</title>
+    {% block extra_head %}{% endblock %}
+  </head>
+
+  <body>
+    <!--neon navbar-->
+    <nav class="navbar sticky-top" style="background:#000;">
+      <div class="container-fluid">
+        <span class="navbar-brand">
+          <i class="fa fa-clapperboard text-accent"></i>
+          Video&nbsp;Hasher
+        </span>
+      </div>
+    </nav>
+
+    <div class="container my-4">
+      {% block body %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='toasts.js') }}"></script>
+
+    <!--page-wide folder drag-drop helper-->
+    <script>
+    document.body.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; };
+    document.body.ondrop     = e => {
+      e.preventDefault();
+      const dir = [...e.dataTransfer.items]
+        .find(i => i.webkitGetAsEntry && i.webkitGetAsEntry().isDirectory);
+      if (!dir) return;
+      const path = dir.getAsFile().path || '';
+      const inp  = document.querySelector('input[name=folder]');
+      if (inp) { inp.value = path; inp.focus(); }
+    };
+    </script>
+  </body>
+</html>

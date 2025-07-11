@@ -1,0 +1,34 @@
+video-hashing/                 ← project root (git repo)
+│
+│  app.py                      # 1-liner that spins up the web package
+│
+├─ backend/                    # all long-running work happens here
+│   ├─ __init__.py
+│   ├─ state.py                # singleton JOBS dict + “safe” snapshot helper
+│   └─ scanner.py              # worker thread: hashing, thumbnails, duplicates
+│
+├─ web/                        # Flask application
+│   ├─ __init__.py             # create_app() + register_routes()
+│   ├─ routes.py               # HTTP endpoints, SSE stream, control API
+│   │
+│   ├─ templates/              # Jinja2 views
+│   │   ├─ base.html           # ‹head›, neon navbar, blocks
+│   │   ├─ index.html          # choose folder → “Start scan”
+│   │   ├─ progress.html       # pending screen + live dashboard
+│   │   ├─ gallery.html        # all videos with preview 
+│   │   └─ results.html        # finished scan summary / downloads / duplicates with previews
+│   │
+│   └─ static/                 # front-end assets
+│       ├─ style.css           # AMOLED + neon cyan + green bars  ← (latest file you pasted)
+│       ├─ progress.js         # EventSource, pause / stop, list updates
+│       ├─ toasts.js           # (optional) Bootstrap toast helper
+│       └─ sw.js               # (optional) service-worker for offline splash
+│
+├─ hashed/                     # runtime output (created on first scan)
+│   ├─ thumbnails/             # ffmpeg stills 320×…
+│   ├─ hash_cache.json         # speeds up re-runs
+│   └─ video_hashes_<jid>.json # one report per scan
+│
+├─ requirements.txt            # Python dependencies
+│
+└─ structure                   # this file

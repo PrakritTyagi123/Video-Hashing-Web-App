@@ -1,0 +1,22 @@
+# Core web stack
+Flask==3.1.1
+Werkzeug>=3.1.0
+
+# Worker utilities
+psutil==7.0.0
+blake3==1.0.5          # optional faster hash (not required if sticking with SHA256)
+Pillow==10.3.0
+send2trash==1.8.2      # safe recycle-bin delete
+
+# Thumbnail / preview helpers
+ffmpeg-python==0.2.0   # thin wrapper; requires ffmpeg executable in PATH
+
+# Reporting / export
+pandas==2.3.0
+numpy>=1.22.4
+python-dateutil>=2.8.2
+pytz>=2020.1
+tzdata>=2022.7
+
+# (optional) if you want to run under gunicorn in production
+# gunicorn==22.0.0

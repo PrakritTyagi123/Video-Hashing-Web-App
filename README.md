@@ -3,10 +3,6 @@
 A self-hosted Flask web-app that walks through any folder, hashes every video (SHA-256 by default, optional **blake3**), and shows you—live—exact duplicates, wasted bytes, and pretty thumbnails / 5-second previews.
 Pause, resume or stop on demand; when you’re done, prune dupes from the browser or export JSON/CSV reports.
 
-<p align="center">
-  <img src="docs/screenshot_dashboard.png" alt="Live dashboard" width="720">
-</p>
-
 ---
 
 ## ✨ Key features
